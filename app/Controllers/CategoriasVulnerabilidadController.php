@@ -16,7 +16,7 @@ class CategoriasVulnerabilidadController extends BaseController
         try {
             $model = new CategoriasVulnerabilidad();
             $response = [
-                'data' =>  $model->findAll(),
+                'data' =>  $model->getAll(),
             ];
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
@@ -26,22 +26,6 @@ class CategoriasVulnerabilidadController extends BaseController
                     ],
                     ResponseInterface::HTTP_OK
                 );
-        }
-    }
-    public function show($id){
-        try {
-            $model = new CategoriasVulnerabilidad();
-            $response = [
-                'data' => $model->where('id',$id)->findAll()
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        } catch (\Throwable $th) {
-            return $this->getResponse(
-                [
-                    'error' => $th->getMessage(),
-                ],
-                ResponseInterface::HTTP_OK
-            );
         }
     }
     public function store(){
@@ -69,7 +53,7 @@ class CategoriasVulnerabilidadController extends BaseController
         }
 
         $model = new CategoriasVulnerabilidad();
-        $result = $model->insert($input);
+        $result = $model->store($input);
         return $this->getResponse(
             [
                 'error' => false,
@@ -103,7 +87,7 @@ class CategoriasVulnerabilidadController extends BaseController
         }
 
         $model = new CategoriasVulnerabilidad();
-        $result = $model->update($id,$input);
+        $result = $model->edit($id,$input);
         
         return $this->getResponse(
             [
@@ -115,8 +99,9 @@ class CategoriasVulnerabilidadController extends BaseController
 
     public function destroy($id){
         try {
+            $input = $this->getRequestInput($this->request);
             $model = new CategoriasVulnerabilidad();
-            $result = $model->delete($id);
+            $result = $model->destroy($id,$input);
             return $this->getResponse(
                 [
                     'msg' =>  $result

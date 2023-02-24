@@ -24,55 +24,99 @@ class ImpactoRiesgo extends Model
 
 
     public function getAll($scene){
-        $query = $this->db->query("SELECT * FROM impacto_riesgo WHERE escenario=$scene");
-        return $query->getResultArray();
+        $sql = "EXEC sp_list_impacto ?";
+        $result = $this->db->query($sql,[$scene])->getResultArray();
+        return $result;
     }
 
     public function store_1($data){
-        $query=$this->db->query("INSERT INTO impacto_riesgo
-        (descripcion,tipo_regla,tipo_valor,comentario,estado,escenario)
-        VALUES ('{$data['descripcion']}','{$data['tipo_regla']}','{$data['tipo_valor']}','{$data['comentario']}','{$data['estado']}','1')") ;
-    
-        return $query;
+        $sql = "EXEC sp_add_impacto_1 ?,?,?,?,?,?,?,?";
+        $result = $this->db->query($sql,[
+            $data['descripcion'],
+            $data['tipo_regla'],
+            $data['tipo_valor'],
+            $data['comentario'],
+            $data['estado'],
+            '1',
+            $data['id_user_added'],
+            $data['date_add']
+        ]);
+        if($result){
+            return true;
+        }
+        return false;
     }
 
     public function store_2($data){
-        $query=$this->db->query("INSERT INTO impacto_riesgo
-        (descripcion,tipo_regla,tipo_valor,operador1,valor1,operador2,valor2,comentario,estado,escenario)
-        VALUES ('{$data['descripcion']}','{$data['tipo_regla']}','{$data['tipo_valor']}','{$data['operador1']}','{$data['valor1']}','{$data['operador2']}','{$data['valor2']}','{$data['comentario']}','{$data['estado']}','2')") ;
-    
-        return $query;
+
+        $sql = "EXEC sp_add_impacto_2 ?,?,?,?,?,?,?,?,?,?,?,?";
+        $result = $this->db->query($sql,[
+            $data['descripcion'],
+            $data['tipo_regla'],
+            $data['tipo_valor'],
+            $data['operador1'],
+            $data['valor1'],
+            $data['operador2'],
+            $data['valor2'],
+            $data['comentario'],
+            $data['estado'],
+            '2',
+            $data['id_user_added'],
+            $data['date_add']
+        ]);
+        if($result){
+            return true;
+        }
+        return false;
+
     }
     public function edit_1($data){
-        $query=$this->db->query("UPDATE impacto_riesgo SET
-            descripcion = '{$data['descripcion']}',
-            tipo_regla = '{$data['tipo_regla']}',
-            tipo_valor = '{$data['tipo_valor']}',
-            comentario = '{$data['comentario']}',
-            estado = '{$data['estado']}',
-            formula = '{$data['formula']}'
-            where id = {$data['id']}
-            ");
-        return $query;
+        $sql = "EXEC sp_edit_impacto_1 ?,?,?,?,?,?,?,?";
+        $result = $this->db->query($sql,[
+            $data['id'],
+            $data['descripcion'],
+            $data['tipo_regla'],
+            $data['tipo_valor'],
+            $data['comentario'],
+            $data['estado'],
+            $data['id_user_updated'],
+            $data['date_modify']
+        ]);
+        if($result){
+            return true;
+        }
+        return false;
     }
     public function edit_2($data){
-        $query=$this->db->query("UPDATE impacto_riesgo SET
-            descripcion = '{$data['descripcion']}',
-            tipo_regla = '{$data['tipo_regla']}',
-            tipo_valor = '{$data['tipo_valor']}',
-            operador1 = '{$data['operador1']}',
-            operador2 = '{$data['operador2']}',
-            valor1 = '{$data['valor1']}',
-            valor2 = '{$data['valor2']}',
-            comentario = '{$data['comentario']}',
-            estado = '{$data['estado']}',
-            formula = '{$data['formula']}'
-            where id = {$data['id']}
-            ");
-        return $query;
+        $sql = "EXEC sp_edit_impacto_2 ?,?,?,?,?,?,?,?,?,?,?,?";
+        $result = $this->db->query($sql,[
+            $data['id'],
+            $data['descripcion'],
+            $data['tipo_regla'],
+            $data['tipo_valor'],
+            $data['operador1'],
+            $data['valor1'],
+            $data['operador2'],
+            $data['valor2'],
+            $data['comentario'],
+            $data['estado'],
+            $data['id_user_updated'],
+            $data['date_modify']
+        ]);
+        if($result){
+            return true;
+        }
+        return false;
     }
-    public function destroy($id){
-        $query = $this->db->query("DELETE from impacto_riesgo where id = {$id}");
-        return $query;
+    public function destroy($id,$data){
+        $sql = "EXEC sp_delete_impacto ?,?,?";
+        $result = $this->db->query($sql,[
+            $id,
+            $data['id_user_deleted'],
+            $data['date_deleted']
+        ]);
+        if($result){
+            return true;
+        }
     }
 }

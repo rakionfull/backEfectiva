@@ -94,7 +94,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('getAreasByActivo', 'Activo::getAreasByActivo',['filter' => 'authFilter']);
     $routes->delete('deleteArea', 'Activo::deleteArea',['filter' => 'authFilter']);
 
-    // $routes->get('getAreasEmpresa', 'Activo::getAreasEmpresa',['filter' => 'authFilter']);
+    $routes->get('getAreasEmpresa/(:num)', 'Activo::getAreasEmpresa/$1',['filter' => 'authFilter']);
     // $routes->post('addAreaEmpresa', 'Activo::addAreaEmpresa',['filter' => 'authFilter']);
     // $routes->post('updateAreaEmpresa', 'Activo::updateAreaEmpresa',['filter' => 'authFilter']);
 
@@ -136,7 +136,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('addUnidades', 'Activo::addUnidades',['filter' => 'authFilter']);
     $routes->post('updateUnidades', 'Activo::updateUnidades',['filter' => 'authFilter']);
     $routes->delete('deleteUnidad', 'Activo::deleteUnidad',['filter' => 'authFilter']);
-    $routes->get('getEmpresaAreaUnidades', 'Activo::getEmpresaAreaUnidades',['filter' => 'authFilter']);
+    // $routes->get('getEmpresaAreaUnidades', 'Activo::getEmpresaAreaUnidades',['filter' => 'authFilter']);
     
 
     //CRUD Macroprocesos
@@ -158,6 +158,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('validarPosicion', 'Activo::validarPosicion',['filter' => 'authFilter']);
     $routes->get('getPosicionByActivo', 'Activo::getPosicionByActivo',['filter' => 'authFilter']);
     $routes->get('getPosicion', 'Activo::getPosicion',['filter' => 'authFilter']);
+    $routes->get('getPosicionByArea/(:num)', 'Activo::getPosicionByArea/$1',['filter' => 'authFilter']);
     $routes->post('addPosicion', 'Activo::addPosicion',['filter' => 'authFilter']);
     $routes->post('updatePosicion', 'Activo::updatePosicion',['filter' => 'authFilter']);
     $routes->delete('deletePosicion', 'Activo::deletePosicion',['filter' => 'authFilter']);
@@ -194,60 +195,70 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('showTipoRiesgo/(:num)','TipoRiesgosController::show/$1',['filter' => 'authFilter']);
     $routes->post('addTipoRiesgo', 'TipoRiesgosController::store',['filter' => 'authFilter']);
     $routes->post('updateTipoRiesgo', 'TipoRiesgosController::update',['filter' => 'authFilter']);
-    $routes->delete('deleteTipoRiesgo/(:num)', 'TipoRiesgosController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteTipoRiesgo/(:num)', 'TipoRiesgosController::destroy/$1', ['filter' => 'authFilter']);
 
     // CRUD PROBABILIDAD RIESGOS
+    $routes->get('getActives/(:num)','ProbabilidadRiesgoController::getActives/$1',['filter' => 'authFilter']);
     $routes->get('getProbabilidadRiesgo/(:num)','ProbabilidadRiesgoController::index/$1',['filter' => 'authFilter']);
-    $routes->get('showProbabilidadRiesgo/(:num)','ProbabilidadRiesgoController::show/$1',['filter' => 'authFilter']);
     $routes->post('addProbabilidadRiesgo1','ProbabilidadRiesgoController::store_escenario_1',['filter' => 'authFilter']);
     $routes->post('addProbabilidadRiesgo2','ProbabilidadRiesgoController::store_escenario_2',['filter' => 'authFilter']);
     $routes->post('updateProbabilidadRiesgo1','ProbabilidadRiesgoController::edit_escenario_1',['filter' => 'authFilter']);
     $routes->post('updateProbabilidadRiesgo2','ProbabilidadRiesgoController::edit_escenario_2',['filter' => 'authFilter']);
-    $routes->delete('deleteProbabilidadRiesgo/(:num)', 'ProbabilidadRiesgoController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteProbabilidadRiesgo/(:num)', 'ProbabilidadRiesgoController::destroy/$1', ['filter' => 'authFilter']);
 
     // CRUD IMPACTO RIESGOS
+    $routes->get('getActivesImpacto/(:num)','ImpactoRiesgoController::getActives/$1',['filter' => 'authFilter']);
     $routes->get('getImpactoRiesgo/(:num)','ImpactoRiesgoController::index/$1',['filter' => 'authFilter']);
-    $routes->get('showImpactoRiesgo/(:num)','ImpactoRiesgoController::show/$1',['filter' => 'authFilter']);
     $routes->post('addImpactoRiesgo1','ImpactoRiesgoController::store_escenario_1',['filter' => 'authFilter']);
     $routes->post('addImpactoRiesgo2','ImpactoRiesgoController::store_escenario_2',['filter' => 'authFilter']);
     $routes->post('updateImpactoRiesgo1','ImpactoRiesgoController::edit_escenario_1',['filter' => 'authFilter']);
     $routes->post('updateImpactoRiesgo2','ImpactoRiesgoController::edit_escenario_2',['filter' => 'authFilter']);
-    $routes->delete('deleteImpactoRiesgo/(:num)', 'ImpactoRiesgoController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteImpactoRiesgo/(:num)', 'ImpactoRiesgoController::destroy/$1', ['filter' => 'authFilter']);
 
     // CRUD NIVEL RIESGO
     $routes->get('getNivelRiesgo','NivelRiesgoController::index',['filter' => 'authFilter']);
-    $routes->get('showNivelRiesgo/(:num)','NivelRiesgoController::show/$1',['filter' => 'authFilter']);
     $routes->post('addNivelRiesgo','NivelRiesgoController::store',['filter' => 'authFilter']);
     $routes->post('updateNivelRiesgo/(:num)','NivelRiesgoController::update/$1',['filter' => 'authFilter']);
-    $routes->delete('deleteNivelRiesgo/(:num)', 'NivelRiesgoController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteNivelRiesgo/(:num)', 'NivelRiesgoController::destroy/$1', ['filter' => 'authFilter']);
 
     // CRUD TIPO DE AMENAZA
     $routes->get('getTiposAmenaza','TipoAmenazaController::index',['filter' => 'authFilter']);
-    $routes->get('showTipoAmenaza/(:num)','TipoAmenazaController::show/$1',['filter' => 'authFilter']);
     $routes->post('addTipoAmenaza','TipoAmenazaController::store',['filter' => 'authFilter']);
     $routes->post('updateTipoAmenaza/(:num)','TipoAmenazaController::update/$1',['filter' => 'authFilter']);
-    $routes->delete('deleteTipoAmenaza/(:num)', 'TipoAmenazaController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteTipoAmenaza/(:num)', 'TipoAmenazaController::destroy/$1', ['filter' => 'authFilter']);
     
     // CRUD DESC DE AMENAZA
     $routes->get('getDescAmenaza','DescripcionAmenazaController::index',['filter' => 'authFilter']);
     $routes->get('showDescAmenaza/(:num)','DescripcionAmenazaController::show/$1',['filter' => 'authFilter']);
     $routes->post('addDescAmenaza','DescripcionAmenazaController::store',['filter' => 'authFilter']);
     $routes->post('updateDescAmenaza/(:num)','DescripcionAmenazaController::update/$1',['filter' => 'authFilter']);
-    $routes->delete('deleteDescAmenaza/(:num)', 'DescripcionAmenazaController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteDescAmenaza/(:num)', 'DescripcionAmenazaController::destroy/$1', ['filter' => 'authFilter']);
     
     // CRUD CATEGORIAS VULNERABILIDAD
     $routes->get('getCategoriasVulnerabilidad','CategoriasVulnerabilidadController::index',['filter' => 'authFilter']);
-    $routes->get('showCategoriasVulnerabilidad/(:num)','CategoriasVulnerabilidadController::show/$1',['filter' => 'authFilter']);
     $routes->post('addCategoriasVulnerabilidad','CategoriasVulnerabilidadController::store',['filter' => 'authFilter']);
     $routes->post('updateCategoriasVulnerabilidad/(:num)','CategoriasVulnerabilidadController::update/$1',['filter' => 'authFilter']);
-    $routes->delete('deleteCategoriasVulnerabilidad/(:num)', 'CategoriasVulnerabilidadController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteCategoriasVulnerabilidad/(:num)', 'CategoriasVulnerabilidadController::destroy/$1', ['filter' => 'authFilter']);
     
     // CRUD DESC VULNERABILIDAD
     $routes->get('getDescVulnerabilidad','DescripcionVulnerabilidadController::index',['filter' => 'authFilter']);
-    $routes->get('showDescVulnerabilidad/(:num)','DescripcionVulnerabilidadController::show/$1',['filter' => 'authFilter']);
     $routes->post('addDescVulnerabilidad','DescripcionVulnerabilidadController::store',['filter' => 'authFilter']);
     $routes->post('updateDescVulnerabilidad/(:num)','DescripcionVulnerabilidadController::update/$1',['filter' => 'authFilter']);
-    $routes->delete('deleteDescVulnerabilidad/(:num)', 'DescripcionVulnerabilidadController::destroy/$1', ['filter' => 'authFilter']);
+    $routes->post('deleteDescVulnerabilidad/(:num)', 'DescripcionVulnerabilidadController::destroy/$1', ['filter' => 'authFilter']);
+
+     $routes->post('updateScene/(:num)','ProbabilidadRiesgoController::updateScene/$1');
+
+    //  CRUD INVENTARIO CLASIFICACION ACTIVO
+    $routes->get('listInventarioClasificacionActivo','InventarioClasificacionActivoController::index');
+    $routes->get('getAllHistoricos','InventarioClasificacionActivoController::getAllHistoricos');
+    $routes->get('getAllHistoricosByUser/(:num)','InventarioClasificacionActivoController::getAllHistoricosByUser/$1');
+    $routes->get('getInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::show/$1');
+    $routes->get('getInventarioClasificacionActivoUser/(:num)','InventarioClasificacionActivoController::getByUser/$1');
+    $routes->post('addInventarioClasificacionActivo','InventarioClasificacionActivoController::store');
+    $routes->post('updateInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::update/$1');
+    $routes->post('deleteInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::destroy/$1');
+    $routes->post('getValorByValoraciones','InventarioClasificacionActivoController::getValorByValoraciones');
+    $routes->post('listByValoraciones','InventarioClasificacionActivoController::listByValoraciones');
 });
 
 /*

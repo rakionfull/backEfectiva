@@ -16,7 +16,7 @@ class DescripcionVulnerabilidadController extends BaseController
         try {
             $model = new DescripcionVulnerabilidad();
             $response = [
-                'data' =>  $model->findAll(),
+                'data' =>  $model->getAll(),
             ];
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
@@ -26,22 +26,6 @@ class DescripcionVulnerabilidadController extends BaseController
                     ],
                     ResponseInterface::HTTP_OK
                 );
-        }
-    }
-    public function show($id){
-        try {
-            $model = new DescripcionVulnerabilidad();
-            $response = [
-                'data' => $model->where('id',$id)->findAll()
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        } catch (\Throwable $th) {
-            return $this->getResponse(
-                [
-                    'error' => $th->getMessage(),
-                ],
-                ResponseInterface::HTTP_OK
-            );
         }
     }
     public function store(){
@@ -69,7 +53,7 @@ class DescripcionVulnerabilidadController extends BaseController
         }
 
         $model = new DescripcionVulnerabilidad();
-        $result = $model->insert($input);
+        $result = $model->store($input);
         return $this->getResponse(
             [
                 'msg' =>  $result
@@ -81,7 +65,7 @@ class DescripcionVulnerabilidadController extends BaseController
         $input = $this->getRequestInput($this->request);
 
         $model = new DescripcionVulnerabilidad();
-        $result = $model->update($id,$input);
+        $result = $model->edit($id,$input);
     
         return $this->getResponse(
             [
@@ -92,8 +76,10 @@ class DescripcionVulnerabilidadController extends BaseController
 
     public function destroy($id){
         try {
+            $input = $this->getRequestInput($this->request);
+
             $model = new DescripcionVulnerabilidad();
-            $result = $model->delete($id);
+            $result = $model->destroy($id,$input);
             return $this->getResponse(
                 [
                     'msg' =>  $result

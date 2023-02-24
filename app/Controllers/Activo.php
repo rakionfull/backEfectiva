@@ -25,7 +25,7 @@ use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 use App\Libraries\Capcha;
-
+use App\Models\InventarioClasificacionActivo;
 use Exception;
 use ReflectionException;
 
@@ -259,12 +259,12 @@ class Activo extends BaseController
       
         
     }
-    public function getAreasEmpresa(){
+    public function getAreasEmpresa($id){
 
         try {
             $model = new Marea();
                 $response = [
-                    'data' =>  $model->getAreasEmpresa()
+                    'data' =>  $model->getAreasEmpresa($id)
                 ];
                 return $this->respond($response, ResponseInterface::HTTP_OK);
         
@@ -928,6 +928,7 @@ class Activo extends BaseController
         );
         
     }
+
     public function updateUnidades()
     {
            
@@ -1322,6 +1323,24 @@ class Activo extends BaseController
         
     }
 
+    public function getPosicionByArea($area_id){
+        try {
+            $model = new MPosicion();
+            $response = [
+                'data' =>  $model->getPosicionByArea($area_id)
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    }
+
     //valoracion de activo
     public function getValActivo(){
 
@@ -1380,13 +1399,25 @@ class Activo extends BaseController
     }
     public function updateValActivo()
     {
-           
         $input = $this->getRequestInput($this->request);
 
       
         $model = new MValoracionActivo();
+        $model_ica = new InventarioClasificacionActivo();
         $result = $model->updateValActivo($input);
-    
+        
+        $icas = $model_ica->listByValoraciones($input);
+
+        if(count($icas) > 0){
+            foreach ($icas as $ica) {
+                // return $this->respond($ica['id'], ResponseInterface::HTTP_OK);
+        
+                $model_ica->update_valor_ica($ica['id'],$input);
+                $model_ica->store_historial(
+                    $ica['id'],$ica
+                );
+            }
+        }
         return $this->getResponse(
             [
                 'msg' =>  $result
