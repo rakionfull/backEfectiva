@@ -311,4 +311,25 @@ class InventarioClasificacionActivoController extends BaseController
         
         }
     }
+    public function updateStatus($id){
+        try {
+            $input = $this->getRequestInput($this->request);
+            $model = new InventarioClasificacionActivo();
+            $result = $model->update_estado_ica($id,$input);
+            return $this->getResponse(
+                [
+                    'error' => false,
+                    'msg' =>  $result
+                ]
+            );
+        } catch (\Throwable $th) {
+            return $this->getResponse(
+                [
+                    'error' => true,
+                    'msg' =>  $th->getMessage()." line ".$th->getLine()." file ".$th->getFile()
+                ]
+            );
+        
+        }
+    }
 }

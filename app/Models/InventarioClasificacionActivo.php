@@ -236,6 +236,24 @@ class InventarioClasificacionActivo extends Model
             return false;
         }
     }
+    public function update_estado_ica($id,$data){
+        try {
+            $sql = "EXEC update_status_ica ?,?,?,?";
+            $result = $this->db->query($sql,[
+                $id,
+                $data['estado'],
+                $data['date_modify'],
+                $data['id_user_updated'],
+            ]);
+            if($result){
+                return true;
+            }
+            return false;
+        } catch (\Throwable $th) {
+            log_message('error',$th->getMessage()." linea ".$th->getLine()." file ".$th->getFile());
+            return false;
+        }
+    }
 
  
 }
