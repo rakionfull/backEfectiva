@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\ImpactoRiesgo;
+use App\Models\Muser;
+use App\Models\ProbabilidadRiesgo;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -10,6 +12,23 @@ use Exception;
 class ImpactoRiesgoController extends BaseController
 {
     use ResponseTrait;
+
+    public function getActives($scene){
+        try {
+            $model = new ImpactoRiesgo();
+            $response = [
+                'data' =>  $model->where('estado','1')->where('escenario',$scene)->findAll(),
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    }
 
     public function index($scene)
     {
@@ -26,22 +45,6 @@ class ImpactoRiesgoController extends BaseController
                     ],
                     ResponseInterface::HTTP_OK
                 );
-        }
-    }
-    public function show($id){
-        try {
-            $model = new ImpactoRiesgo();
-            $response = [
-                'data' => $model->where('id',$id)->findAll()
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        } catch (\Throwable $th) {
-            return $this->getResponse(
-                [
-                    'error' => $th->getMessage(),
-                ],
-                ResponseInterface::HTTP_OK
-            );
         }
     }
     public function store_escenario_1(){
@@ -79,8 +82,10 @@ class ImpactoRiesgoController extends BaseController
             return ($this->getResponse($error,ResponseInterface::HTTP_OK));
         }
         $model = new ImpactoRiesgo();
-        $count_escenario_2 = count($model->where('escenario','2')->findAll());
-        if($count_escenario_2 > 0){
+        $user = new Muser();
+        $userData = $user->getUserbyId($input['id_user']);
+       
+        if($userData->escenario == 2){
             return $this->getResponse(
                 [
                     'error' => true,
@@ -88,7 +93,18 @@ class ImpactoRiesgoController extends BaseController
                 ]
             );
         }else{
-            $result = $model->insert($input);
+            $result = $model->store_1($input);
+
+            $modelProbabilidad= new ProbabilidadRiesgo();
+            $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+            $registrosImpacto = count($model->where('estado','1')->findAll());
+
+            if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                $modelProbabilidad->updateScene($input,null);
+            }else{
+                $modelProbabilidad->updateScene($input,1);
+            }
+
             return $this->getResponse(
                 [
                     'error' => false,
@@ -150,17 +166,31 @@ class ImpactoRiesgoController extends BaseController
             }
 
             $model = new ImpactoRiesgo();
-            $count_escenario_1 = count($model->where('escenario','1')->findAll());
-            if($count_escenario_1 > 0){
+            $user = new Muser();
+            $userData = $user->getUserbyId($input['id_user']);
+            if($userData->escenario == 1){
                 return $this->getResponse(
                     [
+                        'error' => true,
                         'msg' =>  "No se puede ingresar registros a otro escenario distinto"
                     ]
                 );
             }else{
-                $result = $model->insert($input,false);
+                $result = $model->store_2($input,false);
+
+                $modelProbabilidad= new ProbabilidadRiesgo();
+                $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+                $registrosImpacto = count($model->where('estado','1')->findAll());
+
+                if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                    $modelProbabilidad->updateScene($input,null);
+                }else{
+                    $modelProbabilidad->updateScene($input,2);
+                }
+                
                 return $this->getResponse(
                     [
+                        'error' => false,
                         'msg' =>  $result
                     ]
                 );
@@ -168,6 +198,7 @@ class ImpactoRiesgoController extends BaseController
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [
+                    'error' => true,
                     'msg' =>  $th->getMessage()
                 ]
             );
@@ -181,14 +212,26 @@ class ImpactoRiesgoController extends BaseController
             $model = new ImpactoRiesgo();
             $result = $model->edit_1($input);
         
+            $modelProbabilidad= new ProbabilidadRiesgo();
+            $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+            $registrosImpacto = count($model->where('estado','1')->findAll());
+
+            if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                $modelProbabilidad->updateScene($input,null);
+            }else{
+                $modelProbabilidad->updateScene($input,1);
+            }
+
             return $this->getResponse(
                 [
+                    'error' => false,
                     'msg' =>  $result
                 ]
             );
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [
+                    'error' => true,
                     'msg' =>  $th->getMessage()
                 ]
             );
@@ -200,14 +243,27 @@ class ImpactoRiesgoController extends BaseController
             $input = $this->getRequestInput($this->request);
             $model = new ImpactoRiesgo();
             $result = $model->edit_2($input);
+
+            $modelProbabilidad= new ProbabilidadRiesgo();
+            $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+            $registrosImpacto = count($model->where('estado','1')->findAll());
+
+            if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                $modelProbabilidad->updateScene($input,null);
+            }else{
+                $modelProbabilidad->updateScene($input,2);
+            }
+
             return $this->getResponse(
                 [
+                    'error' => false,
                     'msg' =>  $result
                 ]
             );
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [
+                    'error' => true,
                     'msg' =>  $th->getMessage()
                 ]
             );
@@ -216,16 +272,27 @@ class ImpactoRiesgoController extends BaseController
 
     public function destroy($id){
         try {
+            $input = $this->getRequestInput($this->request);
             $model = new ImpactoRiesgo();
-            $result = $model->destroy($id);
+            $result = $model->destroy($id,$input);
+
+            $modelProbabilidad= new ProbabilidadRiesgo();
+            $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+            $registrosImpacto = count($model->where('estado','1')->findAll());
+
+            if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                $modelProbabilidad->updateScene($input,null);
+            }
             return $this->getResponse(
                 [
+                    'error' => false,
                     'msg' =>  $result
                 ]
             );
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [
+                    'error' => true,
                     'msg' =>  'Ocurrio un error '.$th->getMessage()
                 ]
             );

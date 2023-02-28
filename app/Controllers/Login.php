@@ -314,8 +314,10 @@ class Login extends BaseController
                                 'change' => $msg,
                                 'user' => $user->usuario_us,
                                 'id' => $user->id_us,
+                                'escenario' => $user->escenario,
                                 'permisos' => $permisos,
-                                'access_token' => $token
+                                'access_token' => $token,
+                                'is_user_negocio' => $user->is_user_negocio
                             ]
                     );
                    

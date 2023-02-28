@@ -56,6 +56,14 @@ class MPosicion extends Model
         
         return $query;
     }
+    public function getPosicionByArea($area_id){
+        $query = $this->db->query("SELECT PP.id as id_pos,PP.posicion_puesto,PP.idempresa,PP.idunidad,PP.idarea,
+        E.empresa,A.area,U.unidad,PP.estado FROM posicion_puesto as PP inner join empresa as E
+        on PP.idempresa=E.id inner join area as A on PP.idarea=A.id 
+        inner join unidades as U on PP.idunidad=U.id
+        where pp.idarea=$area_id");
+        return $query->getResultArray();
+    }
 
 
 }

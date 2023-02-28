@@ -16,24 +16,7 @@ class NivelRiesgoController extends BaseController
         try {
             $model = new NivelRiesgo();
             $response = [
-                'data' => $model->findAll()
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        } catch (\Throwable $th) {
-            return $this->getResponse(
-                [
-                    'error' => $th->getMessage(),
-                ],
-                ResponseInterface::HTTP_OK
-            );
-        }
-    }
-
-    public function show($id){
-        try {
-            $model = new NivelRiesgo();
-            $response = [
-                'data' => $model->where('id',$id)->findAll()
+                'data' => $model->getAll()
             ];
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
@@ -93,7 +76,7 @@ class NivelRiesgoController extends BaseController
             return ($this->getResponse($error,ResponseInterface::HTTP_OK));
         }
         $model = new NivelRiesgo();
-        $result = $model->insert($input);
+        $result = $model->store($input);
         return $this->getResponse(
             [
                 'msg' =>  $result
@@ -147,7 +130,7 @@ class NivelRiesgoController extends BaseController
             return ($this->getResponse($error,ResponseInterface::HTTP_OK));
         }
         $model = new NivelRiesgo();
-        $result = $model->update($id,$input);
+        $result = $model->edit($id,$input);
         return $this->getResponse(
             [
                 'msg' =>  $result
@@ -157,8 +140,9 @@ class NivelRiesgoController extends BaseController
 
     public function destroy($id){
         try {
+            $input = $this->getRequestInput($this->request);
             $model = new NivelRiesgo();
-            $result = $model->delete($id);
+            $result = $model->destroy($id,$input);
             return $this->getResponse(
                 [
                     'msg' =>  $result

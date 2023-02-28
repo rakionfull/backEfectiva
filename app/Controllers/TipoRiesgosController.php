@@ -27,22 +27,6 @@ class TipoRiesgosController extends BaseController
                 );
         }
     }
-    public function show($id){
-        try {
-            $model = new TipoRiesgo();
-            $response = [
-                'data' => $model->where('id',$id)->findAll()
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        } catch (\Throwable $th) {
-            return $this->getResponse(
-                [
-                    'error' => $th->getMessage(),
-                ],
-                ResponseInterface::HTTP_OK
-            );
-        }
-    }
     public function store(){
         $rules = [
             'tipo_riesgo' => 'required|is_unique[tipo_riesgo.tipo_riesgo]',
@@ -96,8 +80,10 @@ class TipoRiesgosController extends BaseController
 
     public function destroy($id){
         try {
+            $input = $this->getRequestInput($this->request);
+
             $model = new TipoRiesgo();
-            $result = $model->destroy($id);
+            $result = $model->destroy($id,$input);
             return $this->getResponse(
                 [
                     'msg' =>  $result
