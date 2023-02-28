@@ -21,6 +21,13 @@ use App\Models\MValoracionActivo;
 use App\Models\MCatActivo;
 use App\Models\MPais;
 use App\Models\MUbicActivo;
+use App\Models\Mestado;
+use App\Models\Mprioridad;
+use App\Models\Malerta_seguimiento;
+
+
+use App\Models\MriesgoPlanAccion;
+
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
@@ -1224,6 +1231,23 @@ class Activo extends BaseController
 
            
     }
+    public function getPosicionByArea($area_id){
+        try {
+            $model = new MPosicion();
+            $response = [
+                'data' =>  $model->getPosicionByArea($area_id)
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    }
     public function getPosicionByActivo(){
 
         try {
@@ -1725,4 +1749,423 @@ class Activo extends BaseController
 
            
     }
+
+
+    public function getEstado(){
+
+        try {
+            $model = new Mestado();
+                $response = [
+                    'data' =>  $model->getEstado()
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    
+           
+    }
+    
+    public function addEstado(){
+        
+        try {
+            $input = $this->getRequestInput($this->request);
+    
+      
+            $model = new Mestado();
+        
+            $valida = $model -> validaEstado($input[0]['estado']);
+            if(!$valida){
+                $result = $model->saveEstado($input);
+                $msg = 'Registrado Correctamente';
+                $error = 1;
+            }else{
+                $msg = 'Estado ya registrado';
+                $error = 0;
+            }
+            return $this->getResponse(
+                [
+                    'msg' =>  $msg,
+                    'error' =>  $error
+                ]
+            );
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+        );
+        }
+    }
+    
+    public function updateEstado(){
+        
+        try {
+            
+            $input = $this->getRequestInput($this->request);
+        
+            $model = new Mestado();
+            $result = $model->updateEstado($input);
+        
+            return $this->getResponse([
+                'msg' => 'Estado actualizado correctamente',
+                'error' => 1
+            ]);
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse([
+                'error' => $ex->getMessage()
+            ], ResponseInterface::HTTP_OK);
+        }
+        
+    }
+    
+    public function deleteEstado(){
+        
+        try {
+            
+            $input = $this->getRequestInput($this->request);       
+            $model = new Mestado();    
+            
+            $result = $model->deleteEstado($input);   
+            
+            return $this->getResponse([
+                'msg' => 'Estado Eliminado correctamente',
+                'error' => 0
+            ]);
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse([
+                'error' => $ex->getMessage()
+            ], ResponseInterface::HTTP_OK);
+        }
+    }
+    
+    public function getPrioridad(){
+    
+        try {
+            $model = new Mprioridad();
+                $response = [
+                    'data' =>  $model->getPrioridad()
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    
+           
+    }
+    
+    public function addPrioridad(){
+        
+        try {
+            $input = $this->getRequestInput($this->request);
+    
+      
+            $model = new Mprioridad();
+        
+            $valida = $model -> validaPrioridad($input[0]['prioridad']);
+            if(!$valida){
+                $result = $model->savePrioridad($input);
+                $msg = 'Registrado Correctamente';
+                $error = 1;
+            }else{
+                $msg = 'Prioridad ya registrada';
+                $error = 0;
+            }
+            return $this->getResponse(
+                [
+                    'msg' =>  $msg,
+                    'error' =>  $error
+                ]
+            );
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+        );
+    }
+    }
+    
+    public function updatePrioridad(){
+    
+        try {
+            
+            $input = $this->getRequestInput($this->request);
+        
+            $model = new Mprioridad();
+            $result = $model->updatePrioridad($input);
+        
+            return $this->getResponse([
+                'msg' => 'Prioridad actualizada correctamente',
+                'error' => 1
+            ]);
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse([
+                'error' => $ex->getMessage()
+            ], ResponseInterface::HTTP_OK);
+        }
+      
+        
+    }
+    
+    public function deletePrioridad(){
+    
+        try {
+            
+            $input = $this->getRequestInput($this->request);       
+            $model = new Mprioridad();    
+            
+            $result = $model->deletePrioridad($input);   
+            
+            return $this->getResponse([
+                'msg' => 'Prioridad Eliminado correctamente',
+                'error' => 0
+            ]);
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse([
+                'error' => $ex->getMessage()
+            ], ResponseInterface::HTTP_OK);
+        }
+    }
+    
+    public function getAlerta_seguimiento(){
+    
+            try {
+                $model = new Malerta_seguimiento();
+                    $response = [
+                        'data' =>  $model->getAlerta_seguimiento()
+                    ];
+                    return $this->respond($response, ResponseInterface::HTTP_OK);
+            
+            } catch (Exception $ex) {
+                return $this->getResponse(
+                        [
+                            'error' => $ex->getMessage(),
+                        ],
+                        ResponseInterface::HTTP_OK
+                    );
+            }
+    
+               
+    }
+              
+    public function addAlerta_seguimiento(){
+       
+            
+            try {
+                $input = $this->getRequestInput($this->request);
+        
+          
+                $model = new Malerta_seguimiento();
+            
+                $valida = $model -> validaAlerta_seguimiento($input[0]['alerta']);
+                if(!$valida){
+                    $result = $model->saveAlerta_seguimiento($input);
+                    $msg = 'Registrado Correctamente';
+                    $error = 1;
+                }else{
+                    $msg = 'Alerta ya registrada';
+                    $error = 0;
+                }
+                return $this->getResponse(
+                    [
+                        'msg' =>  $msg,
+                        'error' =>  $error
+                    ]
+                );
+            } catch (Exception $ex) {
+                return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+            );
+        }
+    }
+    
+    public function updateAlerta_seguimiento(){
+       
+        try {
+            
+            $input = $this->getRequestInput($this->request);
+        
+            $model = new Malerta_seguimiento();
+            $result = $model->updateAlerta_seguimiento($input);
+        
+            return $this->getResponse([
+                'msg' => 'Alerta actualizada correctamente',
+                'error' => 1
+            ]);
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse([
+                'error' => $ex->getMessage()
+            ], ResponseInterface::HTTP_OK);
+        }
+          
+            
+    }
+    
+    public function deleteAlerta_seguimiento()
+        {
+       
+            try {
+            
+                $input = $this->getRequestInput($this->request);       
+                $model = new Malerta_seguimiento();    
+                
+                $result = $model->deleteAlerta_seguimiento($input);   
+                
+                return $this->getResponse([
+                    'msg' => 'Estado Eliminado correctamente',
+                    'error' => 0
+                ]);
+            
+            } catch (Exception $ex) {
+                
+                return $this->getResponse([
+                    'error' => $ex->getMessage()
+                ], ResponseInterface::HTTP_OK);
+            }
+    }  
+    
+    
+    
+    
+        //-----------------------------RIESGO PLAN DE ACCIÓN-------------------------------------------------
+    
+    
+    
+    
+    
+    public function getPlanAccion(){
+    
+        try {
+            $model = new MriesgoPlanAccion();
+                $response = [
+                    'data' =>  $model->getPlanAccion()
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    
+           
+    }
+    
+    public function addPlanAccion(){
+        
+        try {
+            $input = $this->getRequestInput($this->request);
+    
+      
+            $model = new Mestado();
+        
+            $valida = $model -> validaEstado($input[0]['estado']);
+            if(!$valida){
+                $result = $model->saveEstado($input);
+                $msg = 'Registrado Correctamente';
+                $error = 1;
+            }else{
+                $msg = 'Estado ya registrado';
+                $error = 0;
+            }
+            return $this->getResponse(
+                [
+                    'msg' =>  $msg,
+                    'error' =>  $error
+                ]
+            );
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+        );
+        }
+    }
+    
+    
+    public function updatePlanAccion(){
+        
+        try {
+            
+            $input = $this->getRequestInput($this->request);
+        
+            $model = new Mestado();
+            $result = $model->updateEstado($input);
+        
+            return $this->getResponse([
+                'msg' => 'Estado actualizado correctamente',
+                'error' => 1
+            ]);
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse([
+                'error' => $ex->getMessage()
+            ], ResponseInterface::HTTP_OK);
+        }
+        
+    }
+    
+    
+    public function deletePlanAccion(){
+        
+        try {
+            
+            $input = $this->getRequestInput($this->request);       
+            $model = new Mestado();    
+            
+            $result = $model->updateEstado([
+                'id' => $input['id'],
+                'is_delete' => 1
+            ]);
+        
+            
+            return $this->getResponse([
+                'msg' => 'Estado Eliminado correctamente',
+                'error' => 0
+            ]);
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse([
+                'error' => $ex->getMessage()
+            ], ResponseInterface::HTTP_OK);
+        }
+    }
+    
+
+
 }
