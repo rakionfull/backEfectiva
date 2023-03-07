@@ -176,4 +176,24 @@ class ValoracionRiesgoController extends BaseController
 
            
     }
+
+    public function getValoracionByProbabilidadImpacto(){
+        try {
+            $input = $this->getRequestInput($this->request);
+
+            $model = new MValoracionRiesgo();
+            $response = [
+                'data' => $model->getByProbabilidadImpacto($input)
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+
+        } catch (\Throwable $th) {
+            return $this->getResponse(
+                [
+                    'error' => $th->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+            );
+        }
+    }
 }

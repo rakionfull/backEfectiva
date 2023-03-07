@@ -30,7 +30,7 @@ class ImpactoRiesgo extends Model
     }
 
     public function store_1($data){
-        $sql = "EXEC sp_add_impacto_1 ?,?,?,?,?,?,?,?";
+        $sql = "EXEC sp_add_impacto_1 ?,?,?,?,?,?,?,?,?";
         $result = $this->db->query($sql,[
             $data['descripcion'],
             $data['tipo_regla'],
@@ -38,6 +38,7 @@ class ImpactoRiesgo extends Model
             $data['comentario'],
             $data['estado'],
             '1',
+            $data['formula'],
             $data['id_user_added'],
             $data['date_add']
         ]);
@@ -71,7 +72,7 @@ class ImpactoRiesgo extends Model
 
     }
     public function edit_1($data){
-        $sql = "EXEC sp_edit_impacto_1 ?,?,?,?,?,?,?,?";
+        $sql = "EXEC sp_edit_impacto_1 ?,?,?,?,?,?,?,?,?";
         $result = $this->db->query($sql,[
             $data['id'],
             $data['descripcion'],
@@ -79,6 +80,7 @@ class ImpactoRiesgo extends Model
             $data['tipo_valor'],
             $data['comentario'],
             $data['estado'],
+            $data['formula'],
             $data['id_user_updated'],
             $data['date_modify']
         ]);
@@ -118,5 +120,22 @@ class ImpactoRiesgo extends Model
         if($result){
             return true;
         }
+    }
+
+    public function getActivesScene1(){
+        $sql = "EXEC sp_get_active_impacto_escenario_1";
+        $result = $this->db->query($sql)->getResultArray();
+        return $result;
+    }
+
+    public function validateCombinatoria($data){
+        $sql = "EXEC sp_validate_combinatoria_impacto ?,?,?,?";
+        $result = $this->db->query($sql,[
+            $data['operador1'],
+            $data['valor1'],
+            $data['operador2'],
+            $data['valor2'],
+        ])->getResultArray();
+        return $result;
     }
 }

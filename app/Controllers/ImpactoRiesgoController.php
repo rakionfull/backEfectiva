@@ -93,24 +93,35 @@ class ImpactoRiesgoController extends BaseController
                 ]
             );
         }else{
-            $result = $model->store_1($input);
-
-            $modelProbabilidad= new ProbabilidadRiesgo();
-            $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
-            $registrosImpacto = count($model->where('estado','1')->findAll());
-
-            if($registrosProbabilidad == 0 && $registrosImpacto == 0){
-                $modelProbabilidad->updateScene($input,null);
+            $activesScene1 = $model->getActivesScene1();
+            if(count($activesScene1) > 0){
+                return $this->getResponse(
+                    [
+                        'error' => true,
+                        'msg' =>  'Ya hay un escenario configurado'
+                    ]
+                );
             }else{
-                $modelProbabilidad->updateScene($input,1);
-            }
+                $result = $model->store_1($input);
+    
+                $modelProbabilidad= new ProbabilidadRiesgo();
+                $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+                $registrosImpacto = count($model->where('estado','1')->findAll());
+    
+                if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                    $modelProbabilidad->updateScene($input,null);
+                }else{
+                    $modelProbabilidad->updateScene($input,1);
+                }
+    
+                return $this->getResponse(
+                    [
+                        'error' => false,
+                        'msg' =>  $result
+                    ]
+                );
 
-            return $this->getResponse(
-                [
-                    'error' => false,
-                    'msg' =>  $result
-                ]
-            );
+            }
         }
     }
     public function store_escenario_2(){
@@ -176,24 +187,34 @@ class ImpactoRiesgoController extends BaseController
                     ]
                 );
             }else{
-                $result = $model->store_2($input,false);
-
-                $modelProbabilidad= new ProbabilidadRiesgo();
-                $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
-                $registrosImpacto = count($model->where('estado','1')->findAll());
-
-                if($registrosProbabilidad == 0 && $registrosImpacto == 0){
-                    $modelProbabilidad->updateScene($input,null);
+                $existeCombinatoria = $model->validateCombinatoria($input);
+                if(count($existeCombinatoria) > 0){
+                    return $this->getResponse(
+                        [
+                            'error' => true,
+                            'msg' =>  'Esta combinatoria ya existe'
+                        ]
+                    );
                 }else{
-                    $modelProbabilidad->updateScene($input,2);
+                    $result = $model->store_2($input,false);
+    
+                    $modelProbabilidad= new ProbabilidadRiesgo();
+                    $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+                    $registrosImpacto = count($model->where('estado','1')->findAll());
+    
+                    if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                        $modelProbabilidad->updateScene($input,null);
+                    }else{
+                        $modelProbabilidad->updateScene($input,2);
+                    }
+                    
+                    return $this->getResponse(
+                        [
+                            'error' => false,
+                            'msg' =>  $result
+                        ]
+                    );
                 }
-                
-                return $this->getResponse(
-                    [
-                        'error' => false,
-                        'msg' =>  $result
-                    ]
-                );
             }
         } catch (\Throwable $th) {
             return $this->getResponse(
@@ -242,24 +263,34 @@ class ImpactoRiesgoController extends BaseController
         try {
             $input = $this->getRequestInput($this->request);
             $model = new ImpactoRiesgo();
-            $result = $model->edit_2($input);
-
-            $modelProbabilidad= new ProbabilidadRiesgo();
-            $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
-            $registrosImpacto = count($model->where('estado','1')->findAll());
-
-            if($registrosProbabilidad == 0 && $registrosImpacto == 0){
-                $modelProbabilidad->updateScene($input,null);
+            $existeCombinatoria = $model->validateCombinatoria($input);
+            if(count($existeCombinatoria) > 0){
+                return $this->getResponse(
+                    [
+                        'error' => true,
+                        'msg' =>  'Esta combinatoria ya existe'
+                    ]
+                );
             }else{
-                $modelProbabilidad->updateScene($input,2);
+                $result = $model->edit_2($input);
+    
+                $modelProbabilidad= new ProbabilidadRiesgo();
+                $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+                $registrosImpacto = count($model->where('estado','1')->findAll());
+    
+                if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                    $modelProbabilidad->updateScene($input,null);
+                }else{
+                    $modelProbabilidad->updateScene($input,2);
+                }
+    
+                return $this->getResponse(
+                    [
+                        'error' => false,
+                        'msg' =>  $result
+                    ]
+                );
             }
-
-            return $this->getResponse(
-                [
-                    'error' => false,
-                    'msg' =>  $result
-                ]
-            );
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [

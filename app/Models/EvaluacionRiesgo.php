@@ -100,4 +100,10 @@ class EvaluacionRiesgo extends Model
             return true;
         }
     }
+
+    public function countByValor(){
+        $sql = "EXEC sp_count_evaluacion_by_valor";
+        $result = $this->db->query($sql)->getResultArray();
+        return $result;
+    }
 }

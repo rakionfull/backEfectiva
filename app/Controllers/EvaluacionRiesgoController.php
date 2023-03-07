@@ -28,6 +28,22 @@ class EvaluacionRiesgoController extends BaseController
                 );
         }
     }
+    public function countByValor(){
+        try {
+            $model = new EvaluacionRiesgo();
+            $response = [
+                'data' =>  $model->countByValor(),
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    }
 
     public function show($id){
         try {

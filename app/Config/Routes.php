@@ -408,13 +408,17 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->post('deleteInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::destroy/$1');
       $routes->post('getValorByValoraciones','InventarioClasificacionActivoController::getValorByValoraciones');
       $routes->post('listByValoraciones','InventarioClasificacionActivoController::listByValoraciones');
+      $routes->post('updateStatus/(:num)','InventarioClasificacionActivoController::updateStatus/$1');
   
 
       // CRUD EVALUACION RIESGO
       $routes->get('listEvaluacionRiesgos','EvaluacionRiesgoController::index');
+      $routes->get('getEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::show/$1');
+      $routes->get('countByValor','EvaluacionRiesgoController::countByValor');
       $routes->post('addEvaluacionRiesgo','EvaluacionRiesgoController::store');
       $routes->post('updateEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::update/$1');
       $routes->post('deleteEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::destroy/$1');
+      $routes->post('getValoracionByProbabilidadImpacto','ValoracionRiesgoController::getValoracionByProbabilidadImpacto');
 
 });
 

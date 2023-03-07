@@ -29,8 +29,9 @@ class ProbabilidadRiesgo extends Model
     }
 
     public function store_1($data){
-        $sql = "EXEC sp_add_probabilidad_1 ?,?,?,?,?,?,?,?";
+        $sql = "EXEC sp_add_probabilidad_1 ?,?,?,?,?,?,?,?,?";
         $result = $this->db->query($sql,[
+            $data['formula'],
             $data['descripcion'],
             $data['tipo_regla'],
             $data['tipo_valor'],
@@ -68,7 +69,7 @@ class ProbabilidadRiesgo extends Model
         return false;
     }
     public function edit_1($data){
-        $sql = "EXEC sp_edit_probabilidad_1 ?,?,?,?,?,?,?,?";
+        $sql = "EXEC sp_edit_probabilidad_1 ?,?,?,?,?,?,?,?,?";
         $result = $this->db->query($sql,[
             $data['id'],
             $data['descripcion'],
@@ -76,6 +77,7 @@ class ProbabilidadRiesgo extends Model
             $data['tipo_valor'],
             $data['comentario'],
             $data['estado'],
+            $data['formula'],
             $data['id_user_updated'],
             $data['date_modify']
         ]);
@@ -127,5 +129,21 @@ class ProbabilidadRiesgo extends Model
             return true;
         }
         return false;
+    }
+
+    public function getActivesScene1(){
+        $sql = "EXEC sp_get_active_escenario_1";
+        $result = $this->db->query($sql)->getResultArray();
+        return $result;
+    }
+    public function validateCombinatoria($data){
+        $sql = "EXEC sp_validate_combinatoria_probabilidad ?,?,?,?";
+        $result = $this->db->query($sql,[
+            $data['operador1'],
+            $data['valor1'],
+            $data['operador2'],
+            $data['valor2'],
+        ])->getResultArray();
+        return $result;
     }
 }

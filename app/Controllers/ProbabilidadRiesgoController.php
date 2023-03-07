@@ -108,23 +108,36 @@ class ProbabilidadRiesgoController extends BaseController
                 ]
             );
         }else{
-            $result = $model->insert($input,false);
-
-            $registrosProbabilidad = count($model->where('estado','1')->findAll());
-            $modelImpacto = new ImpactoRiesgo();
-            $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
-            if($registrosImpacto == 0 && $registrosProbabilidad == 0){
-                $model->updateScene($input,null);
+            $activesScene1 = $model->getActivesScene1();
+            if(count($activesScene1) > 0){
+                return $this->getResponse(
+                    [
+                        'error' => true,
+                        'msg' =>  'Ya hay un escenario configurado'
+                    ]
+                );
             }else{
-                $model->updateScene($input,1);
-            }
+                
 
-            return $this->getResponse(
-                [
-                    'error' => false,
-                    'msg' =>  $result
-                ]
-            );
+                $result = $model->insert($input,false);
+    
+                $registrosProbabilidad = count($model->where('estado','1')->findAll());
+                $modelImpacto = new ImpactoRiesgo();
+                $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
+                if($registrosImpacto == 0 && $registrosProbabilidad == 0){
+                    $model->updateScene($input,null);
+                }else{
+                    $model->updateScene($input,1);
+                }
+    
+                return $this->getResponse(
+                    [
+                        'error' => false,
+                        'msg' =>  $result
+                    ]
+                );
+                
+            }
         }
         
     }
@@ -190,22 +203,32 @@ class ProbabilidadRiesgoController extends BaseController
                     ]
                 );
             }else{
-                $result = $model->insert($input,false);
-
-                $registrosProbabilidad = count($model->where('estado','1')->findAll());
-                $modelImpacto = new ImpactoRiesgo();
-                $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
-                if($registrosImpacto == 0 && $registrosProbabilidad == 0){
-                    $model->updateScene($input,null);
+                $existeCombinatoria = $model->validateCombinatoria($input);
+                if(count($existeCombinatoria) > 0){
+                    return $this->getResponse(
+                        [
+                            'error' => true,
+                            'msg' =>  'Esta combinatoria ya existe'
+                        ]
+                    );
                 }else{
-                    $model->updateScene($input,2);
+                    $result = $model->insert($input,false);
+    
+                    $registrosProbabilidad = count($model->where('estado','1')->findAll());
+                    $modelImpacto = new ImpactoRiesgo();
+                    $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
+                    if($registrosImpacto == 0 && $registrosProbabilidad == 0){
+                        $model->updateScene($input,null);
+                    }else{
+                        $model->updateScene($input,2);
+                    }
+                    return $this->getResponse(
+                        [
+                            'error' => false,
+                            'msg' =>  $result
+                        ]
+                    );
                 }
-                return $this->getResponse(
-                    [
-                        'error' => false,
-                        'msg' =>  $result
-                    ]
-                );
             }
 
             
@@ -257,23 +280,33 @@ class ProbabilidadRiesgoController extends BaseController
         try {
             $input = $this->getRequestInput($this->request);
             $model = new ProbabilidadRiesgo();
-            $result = $model->edit_2($input);
-
-            $registrosProbabilidad = count($model->where('estado','1')->findAll());
-            $modelImpacto = new ImpactoRiesgo();
-            $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
-            if($registrosImpacto == 0 && $registrosProbabilidad == 0){
-                $model->updateScene($input,null);
+            $existeCombinatoria = $model->validateCombinatoria($input);
+            if(count($existeCombinatoria) > 0){
+                return $this->getResponse(
+                    [
+                        'error' => true,
+                        'msg' =>  'Esta combinatoria ya existe'
+                    ]
+                );
             }else{
-                $model->updateScene($input,2);
+                $result = $model->edit_2($input);
+    
+                $registrosProbabilidad = count($model->where('estado','1')->findAll());
+                $modelImpacto = new ImpactoRiesgo();
+                $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
+                if($registrosImpacto == 0 && $registrosProbabilidad == 0){
+                    $model->updateScene($input,null);
+                }else{
+                    $model->updateScene($input,2);
+                }
+    
+                return $this->getResponse(
+                    [
+                        'error' => false,
+                        'msg' =>  $result
+                    ]
+                );
             }
-
-            return $this->getResponse(
-                [
-                    'error' => false,
-                    'msg' =>  $result
-                ]
-            );
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [

@@ -68,4 +68,11 @@ class MValoracionRiesgo extends Model
         return $query->getResultArray();
     }
     
+    public function getByProbabilidadImpacto($data){
+        $query = $this->db->query("EXEC sp_get_valoracion_riesgo ?,?",[
+            $data['id_probabilidad'],
+            $data['id_impacto']
+        ]);
+        return $query->getResultArray();;
+    }
 }

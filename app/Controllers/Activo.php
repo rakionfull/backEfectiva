@@ -1347,24 +1347,6 @@ class Activo extends BaseController
         
     }
 
-    public function getPosicionByArea($area_id){
-        try {
-            $model = new MPosicion();
-            $response = [
-                'data' =>  $model->getPosicionByArea($area_id)
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        
-        } catch (Exception $ex) {
-            return $this->getResponse(
-                    [
-                        'error' => $ex->getMessage(),
-                    ],
-                    ResponseInterface::HTTP_OK
-                );
-        }
-    }
-
     //valoracion de activo
     public function getValActivo(){
 
