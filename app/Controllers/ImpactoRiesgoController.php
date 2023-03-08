@@ -263,34 +263,24 @@ class ImpactoRiesgoController extends BaseController
         try {
             $input = $this->getRequestInput($this->request);
             $model = new ImpactoRiesgo();
-            $existeCombinatoria = $model->validateCombinatoria($input);
-            if(count($existeCombinatoria) > 0){
-                return $this->getResponse(
-                    [
-                        'error' => true,
-                        'msg' =>  'Esta combinatoria ya existe'
-                    ]
-                );
+            $result = $model->edit_2($input);
+
+            $modelProbabilidad= new ProbabilidadRiesgo();
+            $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
+            $registrosImpacto = count($model->where('estado','1')->findAll());
+
+            if($registrosProbabilidad == 0 && $registrosImpacto == 0){
+                $modelProbabilidad->updateScene($input,null);
             }else{
-                $result = $model->edit_2($input);
-    
-                $modelProbabilidad= new ProbabilidadRiesgo();
-                $registrosProbabilidad = count($modelProbabilidad->where('estado','1')->findAll());
-                $registrosImpacto = count($model->where('estado','1')->findAll());
-    
-                if($registrosProbabilidad == 0 && $registrosImpacto == 0){
-                    $modelProbabilidad->updateScene($input,null);
-                }else{
-                    $modelProbabilidad->updateScene($input,2);
-                }
-    
-                return $this->getResponse(
-                    [
-                        'error' => false,
-                        'msg' =>  $result
-                    ]
-                );
+                $modelProbabilidad->updateScene($input,2);
             }
+
+            return $this->getResponse(
+                [
+                    'error' => false,
+                    'msg' =>  $result
+                ]
+            );
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [

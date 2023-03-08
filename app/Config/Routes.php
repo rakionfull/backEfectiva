@@ -413,9 +413,11 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
 
       // CRUD EVALUACION RIESGO
       $routes->get('listEvaluacionRiesgos','EvaluacionRiesgoController::index');
+      $routes->get('getListHistorial','EvaluacionRiesgoController::getListHistorial');
       $routes->get('getEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::show/$1');
       $routes->get('countByValor','EvaluacionRiesgoController::countByValor');
       $routes->post('addEvaluacionRiesgo','EvaluacionRiesgoController::store');
+      $routes->post('addEvaluacionRiesgoHistorial','EvaluacionRiesgoController::store_historial');
       $routes->post('updateEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::update/$1');
       $routes->post('deleteEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::destroy/$1');
       $routes->post('getValoracionByProbabilidadImpacto','ValoracionRiesgoController::getValoracionByProbabilidadImpacto');

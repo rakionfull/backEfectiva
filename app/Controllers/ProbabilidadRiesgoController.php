@@ -280,33 +280,23 @@ class ProbabilidadRiesgoController extends BaseController
         try {
             $input = $this->getRequestInput($this->request);
             $model = new ProbabilidadRiesgo();
-            $existeCombinatoria = $model->validateCombinatoria($input);
-            if(count($existeCombinatoria) > 0){
-                return $this->getResponse(
-                    [
-                        'error' => true,
-                        'msg' =>  'Esta combinatoria ya existe'
-                    ]
-                );
+            $result = $model->edit_2($input);
+
+            $registrosProbabilidad = count($model->where('estado','1')->findAll());
+            $modelImpacto = new ImpactoRiesgo();
+            $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
+            if($registrosImpacto == 0 && $registrosProbabilidad == 0){
+                $model->updateScene($input,null);
             }else{
-                $result = $model->edit_2($input);
-    
-                $registrosProbabilidad = count($model->where('estado','1')->findAll());
-                $modelImpacto = new ImpactoRiesgo();
-                $registrosImpacto = count($modelImpacto->where('estado','1')->findAll());
-                if($registrosImpacto == 0 && $registrosProbabilidad == 0){
-                    $model->updateScene($input,null);
-                }else{
-                    $model->updateScene($input,2);
-                }
-    
-                return $this->getResponse(
-                    [
-                        'error' => false,
-                        'msg' =>  $result
-                    ]
-                );
+                $model->updateScene($input,2);
             }
+
+            return $this->getResponse(
+                [
+                    'error' => false,
+                    'msg' =>  $result
+                ]
+            );
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [
