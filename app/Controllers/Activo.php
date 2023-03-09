@@ -1409,21 +1409,19 @@ class Activo extends BaseController
 
       
         $model = new MValoracionActivo();
-        $model_ica = new InventarioClasificacionActivo();
+        // $model_ica = new InventarioClasificacionActivo();
         $result = $model->updateValActivo($input);
         
-        $icas = $model_ica->listByValoraciones($input);
+        // $icas = $model_ica->listByValoraciones($input);
 
-        if(count($icas) > 0){
-            foreach ($icas as $ica) {
-                // return $this->respond($ica['id'], ResponseInterface::HTTP_OK);
-        
-                $model_ica->update_valor_ica($ica['id'],$input);
-                $model_ica->store_historial(
-                    $ica['id'],$ica
-                );
-            }
-        }
+        // if(count($icas) > 0){
+        //     foreach ($icas as $ica) {
+        //         $model_ica->update_valor_ica($ica['id'],$input);
+        //         $model_ica->store_historial(
+        //             $ica['id'],$ica
+        //         );
+        //     }
+        // }
         return $this->getResponse(
             [
                 'msg' =>  $result

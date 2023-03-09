@@ -246,7 +246,15 @@ class InventarioClasificacionActivoController extends BaseController
             $input = $this->getRequestInput($this->request);
     
             $model = new InventarioClasificacionActivo();
+            $ica = $model->find($id);
+            if($ica['estado'] != $input['estado']){
+                $input['id_user_added'] = $input['id_user_updated'];
+                $input['date_add'] = $input['date_modify'];
+                $model->store_historial($id,$input);
+            }
+
             $result = $model->edit($id,$input);
+            
             if($result){
                 return $this->getResponse(
                     [
@@ -254,24 +262,6 @@ class InventarioClasificacionActivoController extends BaseController
                         'msg' =>  $result
                     ]
                 );
-                // $input['id_user_added'] = $input['id_user_updated'];
-                // $input['date_add'] = $input['date_modify'];
-                // $response = $model->store_historial($id,$input);
-                // if($response){
-                //     return $this->getResponse(
-                //         [
-                //             'error' => false,
-                //             'msg' =>  $result
-                //         ]
-                //     );
-                // }else{
-                //     return $this->getResponse(
-                //         [
-                //             'error' => true,
-                //             'msg' =>  'Ocurrio un error'
-                //         ]
-                //     );
-                // }
             }else{
                 return $this->getResponse(
                     [
@@ -315,6 +305,10 @@ class InventarioClasificacionActivoController extends BaseController
         try {
             $input = $this->getRequestInput($this->request);
             $model = new InventarioClasificacionActivo();
+            $ica = $model->find($id);
+            if($input['estado'] != $ica['estado']){
+                $model->store_historial($id,$ica);
+            }
             $result = $model->update_estado_ica($id,$input);
             return $this->getResponse(
                 [
